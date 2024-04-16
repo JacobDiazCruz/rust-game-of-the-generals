@@ -40,10 +40,10 @@ impl PlayerBuilder {
     }
 
     pub fn build(self) -> Player {
-        return Player {
+        Player {
             name: self.name,
             player_color: self.player_color,
             pieces: self.pieces,
-        };
+        }
     }
 }

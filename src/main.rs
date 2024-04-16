@@ -1,6 +1,8 @@
 pub mod player;
+pub mod board;
 
 use crate::player::{ PlayerBuilder, PlayerColors };
+use crate::board::BoardBuilder;
 // create a model for a player with their pieces
 // instantiate the model by defining: let white_player = Player::new()
 // create a model for the board
@@ -13,9 +15,9 @@ use crate::player::{ PlayerBuilder, PlayerColors };
 // 3. piece
 // features:
 // - move the piece to its desired direction
-// - if the piece meets a piece, then if the piece is > than the piece that it tries to remove, remove the piece, else remove the param piece
 fn main() {
     println!("Hello, world!");
-    let white = PlayerBuilder::new("CJ".to_string(), PlayerColors::White).build();
-    println!("Player: {:#?}", white)
+    let white_player = PlayerBuilder::new("CJ".to_string(), PlayerColors::White).build();
+    let black_player = PlayerBuilder::new("CJ".to_string(), PlayerColors::Black).build();
+    let board = BoardBuilder::new(white_player, black_player);
 }
