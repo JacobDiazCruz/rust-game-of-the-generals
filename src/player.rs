@@ -2,10 +2,10 @@
 pub struct Player {
     name: String,
     player_color: PlayerColors,
-    pieces: Pieces,
+    pub pieces: Pieces,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum PlayerColors {
     White,
     Black,
@@ -19,10 +19,10 @@ pub struct PlayerBuilder {
 }
 
 #[derive(Debug, Clone)]
-struct Pieces {
-    flag: (String, u32),
-    spy: (String, u32),
-    private: (String, u32),
+pub struct Pieces {
+    pub flag: (String, u32),
+    pub spy: (String, u32),
+    pub private: (String, u32),
 }
 
 impl PlayerBuilder {
