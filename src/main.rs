@@ -70,7 +70,7 @@ pub struct Cell {
     col: u32,
 }
 
-fn valid_cells_to_move(cell: Cell) -> Vec<String> {
+fn valid_cells_to_move(cell: Cell, cell_to_move: Cell) -> Vec<String> {
     let up = format!("{}{}", cell.row + 1, cell.col);
     let down = format!("{}{}", cell.row - 1, cell.col);
     let left = format!("{}{}", cell.row, cell.col - 1);
@@ -128,7 +128,7 @@ fn main() {
         col: 5,
     };
     let cell_to_move = String::from("36");
-    let valid_cells_to_move = valid_cells_to_move(cell);
+    let valid_cells_to_move = valid_cells_to_move(cell, Cell { row: 3, col: 6 });
     if valid_cells_to_move.contains(&cell_to_move) {
         println!("valid!");
     }
