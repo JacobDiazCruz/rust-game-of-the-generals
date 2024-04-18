@@ -1,9 +1,8 @@
 #[derive(Debug, Clone)]
 pub struct Player {
-    id: String,
-    name: String,
-    player_color: PlayerColors,
-    pub pieces: Pieces,
+    pub id: String,
+    pub name: String,
+    pub player_color: PlayerColors,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -17,28 +16,14 @@ pub struct PlayerBuilder {
     id: String,
     name: String,
     player_color: PlayerColors,
-    pieces: Pieces,
-}
-
-#[derive(Debug, Clone)]
-pub struct Pieces {
-    pub flag: (String, u32),
-    pub spy: (String, u32),
-    pub private: (String, u32),
 }
 
 impl PlayerBuilder {
     pub fn new(name: String, player_color: PlayerColors) -> Self {
-        let pieces = Pieces {
-            flag: (String::from("FLAG"), 14),
-            spy: (String::from("SPY"), 15),
-            private: (String::from("PRIVATE"), 14),
-        };
         Self {
             id: String::from("default"),
             name,
             player_color,
-            pieces,
         }
     }
 
@@ -47,7 +32,6 @@ impl PlayerBuilder {
             id: self.id,
             name: self.name,
             player_color: self.player_color,
-            pieces: self.pieces,
         }
     }
 }

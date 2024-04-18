@@ -1,19 +1,19 @@
 pub mod player;
-pub mod board;
 pub mod game;
 
-use crate::player::{ PlayerBuilder, PlayerColors };
-use crate::board::BoardBuilder;
+use game::Pieces;
+
+use crate::{ player::{ PlayerBuilder, PlayerColors }, game::GameBuilder };
 
 // Board
-// [A1][A2][A3][A4][A5][A6][A7][A8][A9]
-// [B1][B2][B3][B4][B5][B6][B7][B8][B9]
-// [C1][C2][C3][C4][C5][C6][C7][C8][C9]
-// [D1][D2][D3][D4][D5][D6][D7][D8][D9]
-// [E1][E2][E3][E4][E5][E6][E7][E8][E9]
-// [F1][F2][F3][F4][F5][F6][F7][F8][F9]
-// [G1][G2][G3][G4][G5][G6][G7][G8][G9]
-// [H1][H2][H3][H4][H5][H6][H7][H8][H9]
+// [11][12][13][14][15][16][17][18][19]
+// [21][22][23][24][25][26][27][28][29]
+// [31][32][33][34][35][36][37][38][39]
+// [41][41][42][43][45][45][46][47][48]
+// [51][52][53][54][55][56][57][58][59]
+// [61][62][63][64][65][66][67][68][69]
+// [71][72][73][74][75][76][77][78][79]
+// [81][82][83][84][85][86][87][88][89]
 
 // Model
 // Player:
@@ -64,9 +64,72 @@ use crate::board::BoardBuilder;
 //         - else delete your piece
 //     4. if the piece is a "flag", and the desired cell is in the last row of the opposing team, update game "winner"
 
+#[derive(Debug, Clone, Copy)]
+pub struct Cell {
+    row: u32,
+    col: u32,
+}
+
+fn valid_cells_to_move(cell: Cell) -> Vec<String> {
+    let up = format!("{}{}", cell.row + 1, cell.col);
+    let down = format!("{}{}", cell.row - 1, cell.col);
+    let left = format!("{}{}", cell.row, cell.col - 1);
+    let right = format!("{}{}", cell.row, cell.col + 1);
+
+    let mut valid_cells_to_move = Vec::new();
+
+    // first row conditions
+    if cell.row == 1 && cell.col == 1 {
+        valid_cells_to_move.extend(vec![down.clone(), right.clone()]);
+        return valid_cells_to_move;
+    } else if cell.row == 1 && cell.col == 9 {
+        valid_cells_to_move.extend(vec![down.clone(), left.clone()]);
+        return valid_cells_to_move;
+    } else if cell.row == 1 {
+        valid_cells_to_move.extend(vec![down.clone(), left.clone(), right.clone()]);
+        return valid_cells_to_move;
+    }
+
+    // last row conditions
+    if cell.row == 8 && cell.col == 1 {
+        valid_cells_to_move.extend(vec![up.clone(), right.clone()]);
+        return valid_cells_to_move;
+    } else if cell.row == 8 && cell.col == 9 {
+        valid_cells_to_move.extend(vec![up.clone(), left.clone()]);
+        return valid_cells_to_move;
+    } else if cell.row == 8 {
+        valid_cells_to_move.extend(vec![up.clone(), left.clone(), right.clone()]);
+        return valid_cells_to_move;
+    }
+
+    // middle rows but last cols
+    if cell.row != 1 && cell.row != 8 {
+        if cell.col == 1 {
+            valid_cells_to_move.extend(vec![up.clone(), down.clone(), right.clone()]);
+            return valid_cells_to_move;
+        } else if cell.col == 9 {
+            valid_cells_to_move.extend(vec![up.clone(), down.clone(), left.clone()]);
+            return valid_cells_to_move;
+        }
+    }
+
+    // if middle rows and middle cols
+    valid_cells_to_move.extend(vec![up.clone(), down.clone(), left.clone(), right.clone()]);
+    valid_cells_to_move
+}
+
 fn main() {
-    println!("Hello, world!");
-    let white_player = PlayerBuilder::new("PLAYER_1".to_string(), PlayerColors::White).build();
-    let black_player = PlayerBuilder::new("PLAYER_2".to_string(), PlayerColors::Black).build();
-    let board = BoardBuilder::new(white_player, black_player);
+    let player_one = PlayerBuilder::new("PLAYER_1".to_string(), PlayerColors::White).build();
+    let player_two = PlayerBuilder::new("PLAYER_2".to_string(), PlayerColors::Black).build();
+    let game = GameBuilder::new(player_one, player_two);
+    game.build();
+    let cell = Cell {
+        row: 3,
+        col: 5,
+    };
+    let cell_to_move = String::from("36");
+    let valid_cells_to_move = valid_cells_to_move(cell);
+    if valid_cells_to_move.contains(&cell_to_move) {
+        println!("valid!");
+    }
 }
