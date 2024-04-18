@@ -1,5 +1,6 @@
 #[derive(Debug, Clone)]
 pub struct Player {
+    id: String,
     name: String,
     player_color: PlayerColors,
     pub pieces: Pieces,
@@ -13,6 +14,7 @@ pub enum PlayerColors {
 
 #[derive(Debug, Clone)]
 pub struct PlayerBuilder {
+    id: String,
     name: String,
     player_color: PlayerColors,
     pieces: Pieces,
@@ -33,6 +35,7 @@ impl PlayerBuilder {
             private: (String::from("PRIVATE"), 14),
         };
         Self {
+            id: String::from("default"),
             name,
             player_color,
             pieces,
@@ -41,6 +44,7 @@ impl PlayerBuilder {
 
     pub fn build(self) -> Player {
         Player {
+            id: self.id,
             name: self.name,
             player_color: self.player_color,
             pieces: self.pieces,

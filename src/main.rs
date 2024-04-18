@@ -1,5 +1,6 @@
 pub mod player;
 pub mod board;
+pub mod game;
 
 use crate::player::{ PlayerBuilder, PlayerColors };
 use crate::board::BoardBuilder;
