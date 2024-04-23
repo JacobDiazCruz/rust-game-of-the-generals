@@ -133,12 +133,14 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let pool = sqlx::postgres::PgPool::connect(&sql_uri).await?;
     sqlx::migrate!("./migrations").run(&pool).await?;
 
+    println!("wait");
     let player_one = PlayerBuilder::new("PLAYER_ONE".to_string(), "White".to_string()).build();
     let player_two = PlayerBuilder::new("PLAYER_TWO".to_string(), "Black".to_string()).build();
     create_player(&player_one, &pool).await?;
     create_player(&player_two, &pool).await?;
     let game = GameBuilder::new(player_one.clone(), player_two).build();
-    create_game(&game, &pool).await?;
+    let created_game = create_game(&game, &pool).await?;
+    println!("created_game {:#?}", created_game);
 
     let cell = Cell {
         row: 3,

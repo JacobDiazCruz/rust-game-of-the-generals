@@ -1,6 +1,7 @@
+use uuid::Uuid;
 #[derive(Debug, Clone)]
 pub struct Player {
-    pub id: Option<String>,
+    pub id: Option<Uuid>,
     pub player_name: String,
     pub player_color: String,
 }
@@ -13,7 +14,7 @@ pub enum PlayerColors {
 
 #[derive(Debug, Clone)]
 pub struct PlayerBuilder {
-    id: String,
+    pub id: Option<Uuid>,
     player_name: String,
     player_color: String,
 }
@@ -21,7 +22,7 @@ pub struct PlayerBuilder {
 impl PlayerBuilder {
     pub fn new(player_name: String, player_color: String) -> Self {
         Self {
-            id: String::from("default"),
+            id: Some(Uuid::new_v4()),
             player_name,
             player_color,
         }
@@ -29,7 +30,7 @@ impl PlayerBuilder {
 
     pub fn build(self) -> Player {
         Player {
-            id: Some(self.id),
+            id: Some(self.id.unwrap()),
             player_name: self.player_name,
             player_color: self.player_color,
         }

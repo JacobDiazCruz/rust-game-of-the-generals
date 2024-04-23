@@ -1,19 +1,18 @@
 use crate::player::Player;
+use uuid::Uuid;
 
 pub struct Game {
-    pub white_player_id: String,
-    pub black_player_id: String,
-    pub turn_player_id: String,
-    pub winner_player_id: Option<String>,
-    pub status: String,
+    pub white_player_id: Uuid,
+    pub black_player_id: Uuid,
+    pub turn_player_id: Uuid,
+    pub winner_player_id: Option<Uuid>,
 }
 
 pub struct GameBuilder {
-    white_player_id: String,
-    black_player_id: String,
-    turn_player_id: String,
-    winner_player_id: Option<String>,
-    status: String,
+    white_player_id: Uuid,
+    black_player_id: Uuid,
+    turn_player_id: Uuid,
+    winner_player_id: Option<Uuid>,
 }
 enum Status {
     Ongoing,
@@ -39,7 +38,6 @@ impl GameBuilder {
             black_player_id: player_two.id.unwrap(),
             turn_player_id: player_one_id,
             winner_player_id: None,
-            status: "Ongoing".to_string(),
         }
     }
 
@@ -49,7 +47,6 @@ impl GameBuilder {
             black_player_id: self.black_player_id,
             turn_player_id: self.turn_player_id,
             winner_player_id: self.winner_player_id,
-            status: self.status,
         }
     }
 }
