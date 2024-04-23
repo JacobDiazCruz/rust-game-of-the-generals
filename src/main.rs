@@ -1,9 +1,11 @@
 pub mod player;
 pub mod game;
+pub mod queries;
 
-use game::Pieces;
-
-use crate::{ player::{ PlayerBuilder, PlayerColors }, game::GameBuilder };
+use dotenv::dotenv;
+use std::error::Error;
+use crate::queries::queries::create_player;
+use crate::{ player::PlayerBuilder, game::GameBuilder };
 
 // Board
 // [11][12][13][14][15][16][17][18][19]
@@ -118,10 +120,20 @@ fn valid_cells_to_move(cell: Cell, cell_to_move: Cell) -> Vec<String> {
     valid_cells_to_move
 }
 
-fn main() {
-    let player_one = PlayerBuilder::new("PLAYER_1".to_string(), PlayerColors::White).build();
-    let player_two = PlayerBuilder::new("PLAYER_2".to_string(), PlayerColors::Black).build();
-    let game = GameBuilder::new(player_one, player_two);
+#[tokio::main]
+async fn main() -> Result<(), Box<dyn Error>> {
+    dotenv().ok();
+
+    let sql_uri = std::env
+        ::var("SQL_URI")
+        .expect("SQL_URI must be set");
+
+    let pool = sqlx::postgres::PgPool::connect(&sql_uri).await?;
+    sqlx::migrate!("./migrations").run(&pool).await?;
+
+    let player_one = PlayerBuilder::new("PLAYER_1".to_string(), "White".to_string()).build();
+    let player_two = PlayerBuilder::new("PLAYER_2".to_string(), "Black".to_string()).build();
+    let game = GameBuilder::new(player_one.clone(), player_two);
     game.build();
     let cell = Cell {
         row: 3,
@@ -132,4 +144,8 @@ fn main() {
     if valid_cells_to_move.contains(&cell_to_move) {
         println!("valid!");
     }
+
+    create_player(&player_one, &pool).await?;
+
+    Ok(())
 }

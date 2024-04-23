@@ -1,8 +1,8 @@
 #[derive(Debug, Clone)]
 pub struct Player {
-    pub id: String,
-    pub name: String,
-    pub player_color: PlayerColors,
+    pub id: Option<String>,
+    pub player_name: String,
+    pub player_color: String,
 }
 
 #[derive(Debug, Clone, PartialEq)]
@@ -14,23 +14,23 @@ pub enum PlayerColors {
 #[derive(Debug, Clone)]
 pub struct PlayerBuilder {
     id: String,
-    name: String,
-    player_color: PlayerColors,
+    player_name: String,
+    player_color: String,
 }
 
 impl PlayerBuilder {
-    pub fn new(name: String, player_color: PlayerColors) -> Self {
+    pub fn new(player_name: String, player_color: String) -> Self {
         Self {
             id: String::from("default"),
-            name,
+            player_name,
             player_color,
         }
     }
 
     pub fn build(self) -> Player {
         Player {
-            id: self.id,
-            name: self.name,
+            id: Some(self.id),
+            player_name: self.player_name,
             player_color: self.player_color,
         }
     }

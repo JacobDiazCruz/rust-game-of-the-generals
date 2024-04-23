@@ -42,12 +42,12 @@ impl GameBuilder {
         let pieces = vec![flag.clone(), spy.clone(), private.clone()];
 
         let white = Arc::new(GamePlayer {
-            user_id: player_one.id,
+            user_id: player_one.id.unwrap(),
             pieces: pieces.clone(),
             removed_pieces: Vec::new(),
         });
         let black = Arc::new(GamePlayer {
-            user_id: player_two.id,
+            user_id: player_two.id.unwrap(),
             pieces: pieces.clone(),
             removed_pieces: Vec::new(),
         });
