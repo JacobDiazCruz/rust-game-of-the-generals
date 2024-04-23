@@ -1,26 +1,19 @@
 use crate::player::Player;
-use std::sync::Arc;
 
 pub struct Game {
-    white: Arc<GamePlayer>,
-    black: Arc<GamePlayer>,
-    turn: Arc<GamePlayer>,
-    winner: Option<Arc<GamePlayer>>,
-    status: Status,
+    pub white_player_id: String,
+    pub black_player_id: String,
+    pub turn_player_id: String,
+    pub winner_player_id: Option<String>,
+    pub status: String,
 }
 
 pub struct GameBuilder {
-    white: Arc<GamePlayer>,
-    black: Arc<GamePlayer>,
-    turn: Arc<GamePlayer>,
-    winner: Option<Arc<GamePlayer>>,
-    status: Status,
-}
-
-pub struct GamePlayer {
-    user_id: String,
-    pieces: Vec<Pieces>,
-    removed_pieces: Vec<Pieces>,
+    white_player_id: String,
+    black_player_id: String,
+    turn_player_id: String,
+    winner_player_id: Option<String>,
+    status: String,
 }
 enum Status {
     Ongoing,
@@ -39,33 +32,23 @@ impl GameBuilder {
         let flag = Pieces::Flag(String::from("FLAG"), 14);
         let spy = Pieces::Spy(String::from("SPY"), 15);
         let private = Pieces::Private(String::from("PRIVATE"), 14);
-        let pieces = vec![flag.clone(), spy.clone(), private.clone()];
+        let player_one_id = player_one.id.clone().unwrap();
 
-        let white = Arc::new(GamePlayer {
-            user_id: player_one.id.unwrap(),
-            pieces: pieces.clone(),
-            removed_pieces: Vec::new(),
-        });
-        let black = Arc::new(GamePlayer {
-            user_id: player_two.id.unwrap(),
-            pieces: pieces.clone(),
-            removed_pieces: Vec::new(),
-        });
         Self {
-            white: white.clone(),
-            black: black.clone(),
-            turn: white.clone(),
-            winner: None,
-            status: Status::Ongoing,
+            white_player_id: player_one.id.unwrap(),
+            black_player_id: player_two.id.unwrap(),
+            turn_player_id: player_one_id,
+            winner_player_id: None,
+            status: "Ongoing".to_string(),
         }
     }
 
     pub fn build(self) -> Game {
         Game {
-            white: self.white,
-            black: self.black,
-            turn: self.turn,
-            winner: self.winner,
+            white_player_id: self.white_player_id,
+            black_player_id: self.black_player_id,
+            turn_player_id: self.turn_player_id,
+            winner_player_id: self.winner_player_id,
             status: self.status,
         }
     }

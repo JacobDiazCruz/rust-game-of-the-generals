@@ -1,8 +1,10 @@
 pub mod player;
 pub mod game;
 pub mod queries;
+pub mod piece;
 
 use dotenv::dotenv;
+use queries::queries::create_game;
 use std::error::Error;
 use crate::queries::queries::create_player;
 use crate::{ player::PlayerBuilder, game::GameBuilder };
@@ -131,21 +133,22 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let pool = sqlx::postgres::PgPool::connect(&sql_uri).await?;
     sqlx::migrate!("./migrations").run(&pool).await?;
 
-    let player_one = PlayerBuilder::new("PLAYER_1".to_string(), "White".to_string()).build();
-    let player_two = PlayerBuilder::new("PLAYER_2".to_string(), "Black".to_string()).build();
-    let game = GameBuilder::new(player_one.clone(), player_two);
-    game.build();
+    let player_one = PlayerBuilder::new("PLAYER_ONE".to_string(), "White".to_string()).build();
+    let player_two = PlayerBuilder::new("PLAYER_TWO".to_string(), "Black".to_string()).build();
+    create_player(&player_one, &pool).await?;
+    create_player(&player_two, &pool).await?;
+    let game = GameBuilder::new(player_one.clone(), player_two).build();
+    create_game(&game, &pool).await?;
+
     let cell = Cell {
         row: 3,
         col: 5,
     };
     let cell_to_move = String::from("36");
     let valid_cells_to_move = valid_cells_to_move(cell, Cell { row: 3, col: 6 });
-    if valid_cells_to_move.contains(&cell_to_move) {
-        println!("valid!");
+    if !valid_cells_to_move.contains(&cell_to_move) {
+        println!("invalid cell to move, must be up down left or right only!");
     }
-
-    create_player(&player_one, &pool).await?;
 
     Ok(())
 }
