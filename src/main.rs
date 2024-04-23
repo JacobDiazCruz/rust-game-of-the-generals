@@ -80,13 +80,13 @@ fn valid_cells_to_move(cell: Cell, cell_to_move: Cell) -> Vec<String> {
 
     // first row conditions
     if cell.row == 1 && cell.col == 1 {
-        valid_cells_to_move.extend(vec![down.clone(), right.clone()]);
+        valid_cells_to_move.extend(vec![down, right]);
         return valid_cells_to_move;
     } else if cell.row == 1 && cell.col == 9 {
-        valid_cells_to_move.extend(vec![down.clone(), left.clone()]);
+        valid_cells_to_move.extend(vec![down, left]);
         return valid_cells_to_move;
     } else if cell.row == 1 {
-        valid_cells_to_move.extend(vec![down.clone(), left.clone(), right.clone()]);
+        valid_cells_to_move.extend(vec![down, left, right]);
         return valid_cells_to_move;
     }
 
