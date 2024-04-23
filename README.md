@@ -13,6 +13,6 @@
 ```
 
 ### Cell Numbering
-Each cell is represented by two digits: [row][column].
-The first digit indicates the row number.
-The second digit indicates the column number.
+  - Each cell is represented by two digits: [row][column].
+  - The first digit indicates the row number.
+  - The second digit indicates the column number.
