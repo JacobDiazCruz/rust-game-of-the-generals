@@ -69,15 +69,6 @@ use crate::{ player::PlayerBuilder, game::GameBuilder };
 //         - else if your piece is stronger than the opposing piece, move the opposing piece to "removed_pieces", and add your piece to the cell
 //         - else delete your piece
 //     4. if the piece is a "flag", and the desired cell is in the last row of the opposing team, update game "winner"
-
-// basic piece logic:
-// if your piece is the same as enemy piece, delete both
-// if your piece is not private or spy or flag, and if opposing rank is not private or flag: apply ranking deletion
-// if your piece is private, and if opposing rank is not spy, delete private.
-// 
-
-// spy piece logic:
-// if 
 #[derive(Debug, Clone, Copy)]
 pub struct Cell {
     row: u32,
