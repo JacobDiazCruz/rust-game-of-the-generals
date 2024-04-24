@@ -135,7 +135,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         Square { row: 1, col: 3 },
         "11".to_string(),
         &pool
-    );
+    ).await?;
 
     Ok(())
 }
@@ -147,7 +147,7 @@ async fn move_piece(
     current_square: Square,
     destination_square: String,
     conn: &sqlx::PgPool
-) -> Result<(), ()> {
+) -> Result<(), Box<dyn Error>> {
     // get all valid squares to move "ULDR" direction
     let square_to_move = String::from("36");
     let valid_squares_to_move = valid_squares_to_move(current_square);
@@ -180,7 +180,7 @@ async fn move_piece(
         }
         Err(err) => {
             eprintln!("Error: {}", err);
-            Err(())
+            Err(err)
         }
     }
 }
