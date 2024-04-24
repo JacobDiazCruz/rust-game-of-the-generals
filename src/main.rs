@@ -158,7 +158,7 @@ async fn move_piece(
                 eprintln!("invalid square to move, there's an ally piece sitting in it.");
             }
             let enemy_piece = current_piece;
-            compare_and_remove_piece(my_piece, enemy_piece);
+            compare_and_remove_piece(my_piece, enemy_piece, player_id, game_id, conn).await?;
             Ok(())
         }
         Ok(None) => {
@@ -230,38 +230,41 @@ fn valid_squares_to_move(square: Square) -> Vec<String> {
     valid_squares_to_move
 }
 
-fn compare_and_remove_piece(my_piece: Piece, enemy_piece: Piece) {
+async fn compare_and_remove_piece(my_piece: Piece, enemy_piece: Piece, my_player_id: &Uuid, game_id: &Uuid, pool: &sqlx::PgPool) -> Result<(), Box<dyn Error>> {
     if enemy_piece.name == my_piece.name {
         println!("Remove both pieces!");
     } else if enemy_piece.rank > 0 {
         // enemy piece is an officer
         if enemy_piece.rank > my_piece.rank {
-            println!("Remove my piece!");
+            update_piece_square("00".to_string(), my_piece.id, pool).await?;
         } else if my_piece.name == "Private".to_string() {
-            println!("Remove my piece!");
+            update_piece_square("00".to_string(), my_piece.id, pool).await?;
         } else if my_piece.name == "Spy".to_string() {
-            println!("Remove enemy piece!");
+            update_piece_square("00".to_string(), enemy_piece.id, pool).await?;
         }
     } else if enemy_piece.name == "Spy".to_string() {
         // enemy is a spy
         if my_piece.rank > 0 {
-            println!("Remove my piece!");
+            update_piece_square("00".to_string(), my_piece.id, pool).await?;
         } else if my_piece.name == "Private".to_string() {
-            println!("Remove enemy spy piece!");
+            update_piece_square("00".to_string(), enemy_piece.id, pool).await?;
         }
     } else if enemy_piece.name == "Private".to_string() {
         // enemy is a private
         if my_piece.rank > 0 {
-            println!("Remove enemy piece!");
+            update_piece_square("00".to_string(), enemy_piece.id, pool).await?;
         } else if my_piece.name == "Spy".to_string() {
-            println!("Remove my piece!");
+            update_piece_square("00".to_string(), my_piece.id, pool).await?;
         }
     } else if enemy_piece.name == "Flag".to_string() {
-        // enemy is spy
+        // enemy is flag
         if my_piece.name == "Flag".to_string() {
-            println!("Draw!");
+            // you attacked the enemy flag with your flag, you won.
+            update_game_winner(my_player_id, game_id, pool).await?
         } else {
-            println!("Set your name as winner!");
+            // if your piece is a flag and in the last row, you won.
+            update_game_winner(my_player_id, game_id, pool).await?
         }
     }
+    Ok(())
 }
