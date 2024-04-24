@@ -3,6 +3,7 @@ use uuid::Uuid;
 
 #[derive(Debug)]
 pub struct Game {
+    pub id: Option<Uuid>,
     pub white_player_id: Uuid,
     pub black_player_id: Uuid,
     pub turn_player_id: Uuid,
@@ -10,6 +11,7 @@ pub struct Game {
 }
 
 pub struct GameBuilder {
+    id: Option<Uuid>,
     white_player_id: Uuid,
     black_player_id: Uuid,
     turn_player_id: Uuid,
@@ -28,13 +30,14 @@ pub enum Pieces {
 }
 
 impl GameBuilder {
-    pub fn new(player_one: Player, player_two: Player) -> Self {
+    pub fn new(id: Uuid, player_one: Player, player_two: Player) -> Self {
         let flag = Pieces::Flag(String::from("FLAG"), 14);
         let spy = Pieces::Spy(String::from("SPY"), 15);
         let private = Pieces::Private(String::from("PRIVATE"), 14);
         let player_one_id = player_one.id.clone().unwrap();
 
         Self {
+            id: Some(id),
             white_player_id: player_one.id.unwrap(),
             black_player_id: player_two.id.unwrap(),
             turn_player_id: player_one_id,
@@ -44,6 +47,7 @@ impl GameBuilder {
 
     pub fn build(self) -> Game {
         Game {
+            id: self.id,
             white_player_id: self.white_player_id,
             black_player_id: self.black_player_id,
             turn_player_id: self.turn_player_id,

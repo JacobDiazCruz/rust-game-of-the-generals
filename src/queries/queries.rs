@@ -1,5 +1,4 @@
 use std::error::Error;
-use uuid::Uuid;
 use sqlx::Row;
 
 use crate::player::Player;
@@ -15,11 +14,10 @@ pub async fn create_player(player: &Player, pool: &sqlx::PgPool) -> Result<(), B
 }
 
 pub async fn create_game(game: &Game, pool: &sqlx::PgPool) -> Result<(), Box<dyn Error>> {
-    let id = Uuid::new_v4();
     let query = "INSERT INTO game (id, white_player_id, black_player_id, turn_player_id, winner_player_id) VALUES ($1, $2, $3, $4, $5)";
 
     sqlx::query(query)
-        .bind(&id)
+        .bind(&game.id)
         .bind(&game.white_player_id)
         .bind(&game.black_player_id)
         .bind(&game.turn_player_id)
@@ -32,9 +30,10 @@ pub async fn create_game(game: &Game, pool: &sqlx::PgPool) -> Result<(), Box<dyn
 
 
 pub async fn create_piece(piece: &Piece, pool: &sqlx::PgPool) -> Result<(), Box<dyn Error>> {
-    let query = "INSERT INTO piece (name, player_id, game_id, square) VALUES ($1, $2, $3, $4)";
+    let query = "INSERT INTO piece (id, name, player_id, game_id, square) VALUES ($1, $2, $3, $4, $5)";
 
     sqlx::query(query)
+        .bind(&piece.id)
         .bind(&piece.name)
         .bind(&piece.player_id)
         .bind(&piece.game_id)
@@ -53,6 +52,7 @@ pub async fn get_square_piece(selected_square: String, conn: &sqlx::PgPool) -> R
 
     let piece = maybe_row.map(|row| {
         Piece{
+            id: row.get("id"),
             name: row.get("name"),
             player_id: row.get("player_id"),
             game_id: row.get("game_id"),

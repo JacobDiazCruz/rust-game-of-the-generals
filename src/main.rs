@@ -3,11 +3,12 @@ pub mod game;
 pub mod queries;
 pub mod piece;
 
+use piece::PieceBuilder;
 use uuid::Uuid;
 use dotenv::dotenv;
 use queries::queries::create_game;
 use std::error::Error;
-use crate::queries::queries::create_player;
+use crate::queries::queries::{create_player, create_piece};
 use crate::{ player::PlayerBuilder, game::GameBuilder };
 
 // Board
@@ -123,6 +124,10 @@ fn valid_cells_to_move(cell: Cell, cell_to_move: Cell) -> Vec<String> {
     valid_cells_to_move
 }
 
+fn move_piece(player_id: String, ) {
+    // move piece
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn Error>> {
     dotenv().ok();
@@ -135,6 +140,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     sqlx::migrate!("./migrations").run(&pool).await?;
 
     println!("wait");
+
+    // create player
     let player_one = PlayerBuilder::new(
         Uuid::new_v4(), 
         "PLAYER_ONE".to_string(), 
@@ -145,11 +152,21 @@ async fn main() -> Result<(), Box<dyn Error>> {
         "PLAYER_TWO".to_string(), 
         "Black".to_string())
     .build();
+
     create_player(&player_one, &pool).await?;
     create_player(&player_two, &pool).await?;
-    let game = GameBuilder::new(player_one.clone(), player_two).build();
-    let created_game = create_game(&game, &pool).await?;
-    println!("created_game {:#?}", created_game);
+
+    // create game
+    let game = GameBuilder::new(Uuid::new_v4(), player_one.clone(), player_two).build();
+    create_game(&game, &pool).await?;
+
+    // create game pieces
+    let board_pieces = PieceBuilder::create_board_pieces(player_one.id.unwrap(), game.id.unwrap());
+    
+    for piece in board_pieces.iter() {
+        create_piece(piece, &pool).await?;
+    }
+    
 
     let cell = Cell {
         row: 3,
