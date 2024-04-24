@@ -115,18 +115,12 @@ async fn main() -> Result<(), Box<dyn Error>> {
 
     // Example of moving a piece
     // @Note: Move this to a socket function
-    let dummy_officer_eliminations = vec![
-        "lower_rank_officers".to_string(),
-        "private".to_string(),
-        "flag".to_string()
-    ];
     let dummy_two_star_general = PieceBuilder::new(
         4,
         "Two Star General".to_string(),
         player_one.id.unwrap().clone(),
         game.id.unwrap().clone(),
-        "13".to_string(),
-        dummy_officer_eliminations.clone()
+        "13".to_string()
     ).build();
     move_piece(
         &game.id.unwrap(),

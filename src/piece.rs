@@ -7,7 +7,6 @@ pub struct Piece {
     pub player_id: Uuid,
     pub game_id: Uuid,
     pub square: String,
-    pub eliminations: Vec<String>,
 }
 
 pub struct PieceBuilder {
@@ -17,7 +16,6 @@ pub struct PieceBuilder {
     player_id: Uuid,
     game_id: Uuid,
     square: String,
-    eliminations: Vec<String>,
 }
 
 impl PieceBuilder {
@@ -27,7 +25,6 @@ impl PieceBuilder {
         player_id: Uuid,
         game_id: Uuid,
         square: String,
-        eliminations: Vec<String>
     ) -> Self {
         let id = Uuid::new_v4();
         Self {
@@ -36,8 +33,7 @@ impl PieceBuilder {
             name,
             player_id,
             game_id,
-            square,
-            eliminations,
+            square
         }
     }
 
@@ -49,38 +45,26 @@ impl PieceBuilder {
     // 1. loop the eliminations field
     // 6. if enemy piece has rank, and elimiation === "all_officers", remove enemy piece.
     pub fn create_board_pieces(player_id: Uuid, game_id: Uuid) -> Vec<Piece> {
-        let officer_eliminations = vec![
-            "lower_rank_officers".to_string(),
-            "private".to_string(),
-            "flag".to_string()
-        ];
-        let private_eliminations = vec!["spy".to_string(), "flag".to_string()];
-        let spy_eliminations = vec!["all_officers".to_string(), "flag".to_string()];
-        let flag_eliminations = vec!["flag".to_string()];
-
         let flag = PieceBuilder::new(
             0,
             "Flag".to_string(),
             player_id,
             game_id,
-            "11".to_string(),
-            flag_eliminations
+            "11".to_string()
         );
         let spy: PieceBuilder = PieceBuilder::new(
             0,
             "Spy".to_string(),
             player_id,
             game_id,
-            "12".to_string(),
-            spy_eliminations
+            "12".to_string()
         );
         let private = PieceBuilder::new(
             0,
             "Private".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            private_eliminations.clone()
+            "13".to_string()
         );
 
         let five_star_general = PieceBuilder::new(
@@ -88,96 +72,84 @@ impl PieceBuilder {
             "Five Star General".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let four_star_general = PieceBuilder::new(
             2,
             "Four Star General".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let three_star_general = PieceBuilder::new(
             3,
             "Three Star General".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let two_star_general = PieceBuilder::new(
             4,
             "Two Star General".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let one_star_general = PieceBuilder::new(
             5,
             "One Star General".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let colonel = PieceBuilder::new(
             6,
             "Colonel".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let lt_colonel = PieceBuilder::new(
             7,
             "Lieutenant Colonel".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let major = PieceBuilder::new(
             8,
             "Major".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let captain = PieceBuilder::new(
             9,
             "Captain".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let first_lt = PieceBuilder::new(
             10,
             "First Lieutenant".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let second_lt = PieceBuilder::new(
             11,
             "Second Lieutenant".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
         let sergeant = PieceBuilder::new(
             12,
             "Sergeant".to_string(),
             player_id,
             game_id,
-            "13".to_string(),
-            officer_eliminations.clone()
+            "13".to_string()
         );
 
         let pieces = vec![
@@ -208,7 +180,6 @@ impl PieceBuilder {
             player_id: self.player_id,
             game_id: self.game_id,
             square: self.square,
-            eliminations: self.eliminations,
         }
     }
 }

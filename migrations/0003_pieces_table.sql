@@ -4,6 +4,5 @@ create table piece (
     name varchar not null,
     player_id UUID REFERENCES player(id),
     game_id UUID REFERENCES game(id),
-    square varchar not null,
-    eliminations varchar[] not null
+    square varchar not null
 );
