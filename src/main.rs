@@ -7,10 +7,10 @@ use piece::PieceBuilder;
 use sqlx::pool;
 use uuid::Uuid;
 use dotenv::dotenv;
-use queries::queries::{ create_game, get_piece, update_piece };
+use queries::queries::{ create_game, get_piece, update_piece_square };
 use std::error::Error;
 use crate::piece::Piece;
-use crate::queries::queries::{ create_player, create_piece };
+use crate::queries::queries::{ create_player, create_piece, update_game_winner };
 use crate::{ player::PlayerBuilder, game::GameBuilder };
 
 // Board
@@ -162,16 +162,16 @@ async fn move_piece(
             Ok(())
         }
         Ok(None) => {
-            // if your piece is a flag and in the last row, you won.
-            if
+            if 
                 my_piece.name == "Flag".to_string() &&
                 destination_square.clone().chars().next() == Some('1')
             {
-                println!("I won!");
+                // if your piece is a flag and in the last row, you won.
+                update_game_winner(player_id, game_id, conn).await?
             } else {
                 // move your piece to the desired square
                 // by updating the piece's square
-                update_piece(destination_square, my_piece.id, &conn).await?
+                update_piece_square(destination_square, my_piece.id, &conn).await?
             }
             Ok(())
         }
