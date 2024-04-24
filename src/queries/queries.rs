@@ -1,24 +1,22 @@
 use std::error::Error;
 use uuid::Uuid;
+use sqlx::Row;
 
 use crate::player::Player;
 use crate::piece::Piece;
 use crate::game::Game;
-use sqlx::Row;
-// use sqlx::types::Uuid;
 
 pub async fn create_player(player: &Player, pool: &sqlx::PgPool) -> Result<(), Box<dyn Error>> {
-    let id: Uuid = Uuid::new_v4();
-    let query = "INSERT INTO player (id, player_name, player_color) VALUES (gen_random_uuid(), $2, $3)";
+    let query = "INSERT INTO player (id, player_name, player_color) VALUES ($1, $2, $3)";
 
-    sqlx::query(query).bind(&id).bind(&player.player_name).bind(&player.player_color).execute(pool).await?;
+    sqlx::query(query).bind(&player.id).bind(&player.player_name).bind(&player.player_color).execute(pool).await?;
 
     Ok(())
 }
 
 pub async fn create_game(game: &Game, pool: &sqlx::PgPool) -> Result<(), Box<dyn Error>> {
     let id = Uuid::new_v4();
-    let query = "INSERT INTO game (id, white_player_id, black_player_id, turn_player_id, winner_player_id) VALUES (gen_random_uuid(), $2, $3, $4, $5)";
+    let query = "INSERT INTO game (id, white_player_id, black_player_id, turn_player_id, winner_player_id) VALUES ($1, $2, $3, $4, $5)";
 
     sqlx::query(query)
         .bind(&id)
@@ -28,8 +26,6 @@ pub async fn create_game(game: &Game, pool: &sqlx::PgPool) -> Result<(), Box<dyn
         .bind(&game.winner_player_id)
         .execute(pool)
         .await?;
-
-    println!("im here create_game");
 
     Ok(())
 }

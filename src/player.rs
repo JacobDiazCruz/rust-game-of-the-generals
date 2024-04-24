@@ -20,9 +20,9 @@ pub struct PlayerBuilder {
 }
 
 impl PlayerBuilder {
-    pub fn new(player_name: String, player_color: String) -> Self {
+    pub fn new(id: Uuid, player_name: String, player_color: String) -> Self {
         Self {
-            id: Some(Uuid::new_v4()),
+            id: Some(id),
             player_name,
             player_color,
         }

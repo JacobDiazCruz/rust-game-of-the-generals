@@ -1,6 +1,7 @@
 use crate::player::Player;
 use uuid::Uuid;
 
+#[derive(Debug)]
 pub struct Game {
     pub white_player_id: Uuid,
     pub black_player_id: Uuid,
