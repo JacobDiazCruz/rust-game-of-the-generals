@@ -123,7 +123,7 @@ fn valid_cells_to_move(cell: Cell, cell_to_move: Cell) -> Vec<String> {
     valid_cells_to_move
 }
 
-fn move_piece(player_id: String, ) {
+fn move_piece(player_id: String) {
     // move piece
 }
 

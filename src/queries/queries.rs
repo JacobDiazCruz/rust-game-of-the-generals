@@ -36,15 +36,17 @@ pub async fn create_game(game: &Game, pool: &sqlx::PgPool) -> Result<(), Box<dyn
 
 pub async fn create_piece(piece: &Piece, pool: &sqlx::PgPool) -> Result<(), Box<dyn Error>> {
     let query =
-        "INSERT INTO piece (id, name, player_id, game_id, square) VALUES ($1, $2, $3, $4, $5)";
+        "INSERT INTO piece (id, rank, name, player_id, game_id, square, eliminations) VALUES ($1, $2, $3, $4, $5, $6, $7)";
 
     sqlx
         ::query(query)
         .bind(&piece.id)
+        .bind(&piece.rank)
         .bind(&piece.name)
         .bind(&piece.player_id)
         .bind(&piece.game_id)
         .bind(&piece.square)
+        .bind(&piece.eliminations)
         .execute(pool).await?;
 
     Ok(())

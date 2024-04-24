@@ -34,10 +34,10 @@ impl PieceBuilder {
             id,
             rank,
             name,
-            eliminations,
             player_id,
             game_id,
             square,
+            eliminations,
         }
     }
 
@@ -80,7 +80,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            private_eliminations.clone()
         );
 
         let five_star_general = PieceBuilder::new(
@@ -89,7 +89,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let four_star_general = PieceBuilder::new(
             2,
@@ -97,7 +97,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let three_star_general = PieceBuilder::new(
             3,
@@ -105,7 +105,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let two_star_general = PieceBuilder::new(
             4,
@@ -113,7 +113,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let one_star_general = PieceBuilder::new(
             5,
@@ -121,7 +121,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let colonel = PieceBuilder::new(
             6,
@@ -129,7 +129,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let lt_colonel = PieceBuilder::new(
             7,
@@ -137,7 +137,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let major = PieceBuilder::new(
             8,
@@ -145,7 +145,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let captain = PieceBuilder::new(
             9,
@@ -153,7 +153,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let first_lt = PieceBuilder::new(
             10,
@@ -161,7 +161,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let second_lt = PieceBuilder::new(
             11,
@@ -169,7 +169,7 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
         let sergeant = PieceBuilder::new(
             12,
@@ -177,11 +177,27 @@ impl PieceBuilder {
             player_id,
             game_id,
             "13".to_string(),
-            private_eliminations
+            officer_eliminations.clone()
         );
 
-        let vec = vec![flag.build(), spy.build(), private.build()];
-        vec
+        let eliminations = vec![
+            flag.build(),
+            spy.build(),
+            private.build(),
+            five_star_general.build(),
+            four_star_general.build(),
+            three_star_general.build(),
+            two_star_general.build(),
+            one_star_general.build(),
+            colonel.build(),
+            lt_colonel.build(),
+            major.build(),
+            captain.build(),
+            first_lt.build(),
+            second_lt.build(),
+            sergeant.build()
+        ];
+        eliminations
     }
 
     pub fn build(self) -> Piece {
@@ -190,9 +206,9 @@ impl PieceBuilder {
             rank: self.rank,
             name: self.name,
             player_id: self.player_id,
-            eliminations: self.eliminations,
             game_id: self.game_id,
             square: self.square,
+            eliminations: self.eliminations,
         }
     }
 }
