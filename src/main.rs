@@ -4,9 +4,10 @@ pub mod queries;
 pub mod piece;
 
 use piece::PieceBuilder;
+use sqlx::pool;
 use uuid::Uuid;
 use dotenv::dotenv;
-use queries::queries::{ create_game, get_piece };
+use queries::queries::{ create_game, get_piece, update_piece };
 use std::error::Error;
 use crate::piece::Piece;
 use crate::queries::queries::{ create_player, create_piece };
@@ -169,6 +170,8 @@ async fn move_piece(
                 println!("I won!");
             } else {
                 // move your piece to the desired square
+                // by updating the piece's square
+                update_piece(destination_square, my_piece.id, &conn).await?
             }
             Ok(())
         }

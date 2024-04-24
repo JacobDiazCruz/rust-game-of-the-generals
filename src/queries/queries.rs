@@ -52,6 +52,19 @@ pub async fn create_piece(piece: &Piece, pool: &sqlx::PgPool) -> Result<(), Box<
     Ok(())
 }
 
+pub async fn update_piece(square: String, piece_id: Uuid, pool: &sqlx::PgPool) -> Result<(), Box<dyn Error>> {
+    let query =
+        "UPDATE piece SET square = $1 WHERE id = $2";
+
+    sqlx
+        ::query(query)
+        .bind(&square)
+        .bind(&piece_id)
+        .execute(pool).await?;
+
+    Ok(())
+}
+
 pub async fn get_piece(
     game_id: &Uuid,
     square: String,
