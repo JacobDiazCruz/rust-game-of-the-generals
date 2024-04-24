@@ -54,11 +54,12 @@ pub async fn create_piece(piece: &Piece, pool: &sqlx::PgPool) -> Result<(), Box<
 }
 
 pub async fn get_piece(
+    game_id: &Uuid,
     square: String,
     conn: &sqlx::PgPool
 ) -> Result<Option<Piece>, Box<dyn Error>> {
-    let q = "SELECT * FROM piece WHERE square = $1";
-    let query = sqlx::query(q).bind(square);
+    let q = "SELECT * FROM piece WHERE square = $1 AND game_id = $2";
+    let query = sqlx::query(q).bind(square).bind(game_id);
 
     let maybe_row = query.fetch_optional(conn).await?;
 

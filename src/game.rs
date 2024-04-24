@@ -18,18 +18,8 @@ pub struct GameBuilder {
     winner_player_id: Option<Uuid>,
 }
 
-#[derive(Debug, Clone)]
-pub enum Pieces {
-    Flag(String, u32),
-    Spy(String, u32),
-    Private(String, u32),
-}
-
 impl GameBuilder {
     pub fn new(id: Uuid, player_one: Player, player_two: Player) -> Self {
-        let flag = Pieces::Flag(String::from("FLAG"), 14);
-        let spy = Pieces::Spy(String::from("SPY"), 15);
-        let private = Pieces::Private(String::from("PRIVATE"), 14);
         let player_one_id = player_one.id.clone().unwrap();
 
         Self {

@@ -83,7 +83,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let sql_uri = std::env::var("SQL_URI").expect("SQL_URI must be set");
 
     let pool = sqlx::postgres::PgPool::connect(&sql_uri).await?;
-    sqlx::migrate("./migrations").run(&pool).await?;
+    sqlx::migrate!("./migrations").run(&pool).await?;
 
     println!("wait");
 
@@ -129,6 +129,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         dummy_officer_eliminations.clone()
     ).build();
     move_piece(
+        &game.id.unwrap(),
         &player_one.id.unwrap(),
         dummy_two_star_general,
         Square { row: 1, col: 3 },
@@ -140,6 +141,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
 }
 
 async fn move_piece(
+    game_id: &Uuid,
     player_id: &Uuid,
     my_piece: Piece,
     current_square: Square,
@@ -154,7 +156,7 @@ async fn move_piece(
     }
 
     // check if there's a current piece in the desired square
-    let current_piece = get_piece(destination_square, conn).await;
+    let current_piece = get_piece(game_id, destination_square.clone(), conn).await;
     match current_piece {
         Ok(Some(current_piece)) => {
             if current_piece.player_id == player_id.clone() {
@@ -166,7 +168,10 @@ async fn move_piece(
         }
         Ok(None) => {
             // if your piece is a flag and in the last row, you won.
-            if my_piece.name == "Flag".to_string() && destination_square {
+            if
+                my_piece.name == "Flag".to_string() &&
+                destination_square.clone().chars().next() == Some('1')
+            {
                 println!("I won!");
             } else {
                 // move your piece to the desired square
