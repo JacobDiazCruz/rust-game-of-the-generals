@@ -1,5 +1,6 @@
 use std::error::Error;
 use sqlx::Row;
+use uuid::Uuid;
 
 use crate::player::Player;
 use crate::piece::Piece;
@@ -52,12 +53,12 @@ pub async fn create_piece(piece: &Piece, pool: &sqlx::PgPool) -> Result<(), Box<
     Ok(())
 }
 
-pub async fn get_square_piece(
-    selected_square: String,
+pub async fn get_piece(
+    square: String,
     conn: &sqlx::PgPool
 ) -> Result<Option<Piece>, Box<dyn Error>> {
-    let q = "SELECT name, square FROM games WHERE square = $1";
-    let query = sqlx::query(q).bind(selected_square);
+    let q = "SELECT * FROM piece WHERE square = $1";
+    let query = sqlx::query(q).bind(square);
 
     let maybe_row = query.fetch_optional(conn).await?;
 

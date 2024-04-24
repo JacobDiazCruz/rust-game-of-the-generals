@@ -17,10 +17,6 @@ pub struct GameBuilder {
     turn_player_id: Uuid,
     winner_player_id: Option<Uuid>,
 }
-enum Status {
-    Ongoing,
-    Done,
-}
 
 #[derive(Debug, Clone)]
 pub enum Pieces {

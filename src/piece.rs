@@ -42,11 +42,11 @@ impl PieceBuilder {
     }
 
     // logic for checking eliminations
-    // 1. loop the eliminations field
     // 2. if enemy piece is has rank, compare ranks and remove the lower ranking piece.
     // 3. if enemy piece is == to "private", remove enemy piece.
     // 4. if enemy piece is == to "flag", remove enemy piece.
     // 5. if enemy piece is == to "spy", remove enemy piece.
+    // 1. loop the eliminations field
     // 6. if enemy piece has rank, and elimiation === "all_officers", remove enemy piece.
     pub fn create_board_pieces(player_id: Uuid, game_id: Uuid) -> Vec<Piece> {
         let officer_eliminations = vec![
@@ -180,7 +180,7 @@ impl PieceBuilder {
             officer_eliminations.clone()
         );
 
-        let eliminations = vec![
+        let pieces = vec![
             flag.build(),
             spy.build(),
             private.build(),
@@ -197,7 +197,7 @@ impl PieceBuilder {
             second_lt.build(),
             sergeant.build()
         ];
-        eliminations
+        pieces
     }
 
     pub fn build(self) -> Piece {
