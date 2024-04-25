@@ -1,5 +1,7 @@
 use uuid::Uuid;
 
+use crate::Square;
+
 pub struct Piece {
     pub id: Uuid,
     pub rank: i32,
@@ -16,6 +18,59 @@ pub struct PieceBuilder {
     player_id: Uuid,
     game_id: Uuid,
     square: String,
+}
+
+pub struct Directions {
+    pub up: String,
+    pub down: String,
+    pub left: String,
+    pub right: String
+}
+
+impl Piece {
+    pub fn valid_squares_to_move<'a>(square: &Square, directions: &'a Directions) -> Vec<&'a String> {
+        let Directions { up, down, left, right } = directions;
+        let mut valid_squares_to_move = Vec::new();
+
+        // first row conditions
+        if square.row == 1 && square.col == 1 {
+            valid_squares_to_move.extend(vec![down, right]);
+            return valid_squares_to_move;
+        } else if square.row == 1 && square.col == 9 {
+            valid_squares_to_move.extend(vec![down, left]);
+            return valid_squares_to_move;
+        } else if square.row == 1 {
+            valid_squares_to_move.extend(vec![down, left, right]);
+            return valid_squares_to_move;
+        }
+
+        // last row conditions
+        if square.row == 8 && square.col == 1 {
+            valid_squares_to_move.extend(vec![up, right]);
+            return valid_squares_to_move;
+        } else if square.row == 8 && square.col == 9 {
+            valid_squares_to_move.extend(vec![up, left]);
+            return valid_squares_to_move;
+        } else if square.row == 8 {
+            valid_squares_to_move.extend(vec![up, left, right]);
+            return valid_squares_to_move;
+        }
+
+        // middle rows but last cols
+        if square.row != 1 && square.row != 8 {
+            if square.col == 1 {
+                valid_squares_to_move.extend(vec![up, down, right]);
+                return valid_squares_to_move;
+            } else if square.col == 9 {
+                valid_squares_to_move.extend(vec![up, down, left]);
+                return valid_squares_to_move;
+            }
+        }
+
+        // if middle rows and middle cols
+        valid_squares_to_move.extend(vec![&up, &down, &left, &right]);
+        valid_squares_to_move
+    }
 }
 
 impl PieceBuilder {

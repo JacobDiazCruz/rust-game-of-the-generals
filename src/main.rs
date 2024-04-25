@@ -3,8 +3,7 @@ pub mod game;
 pub mod queries;
 pub mod piece;
 
-use piece::PieceBuilder;
-use sqlx::pool;
+use piece::{PieceBuilder, Directions};
 use uuid::Uuid;
 use dotenv::dotenv;
 use queries::queries::{ create_game, get_piece, update_piece_square };
@@ -86,8 +85,6 @@ async fn main() -> Result<(), Box<dyn Error>> {
     let pool = sqlx::postgres::PgPool::connect(&sql_uri).await?;
     sqlx::migrate!("./migrations").run(&pool).await?;
 
-    println!("wait");
-
     // create player
     let player_one = PlayerBuilder::new(
         Uuid::new_v4(),
@@ -113,6 +110,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
     for piece in board_pieces.iter() {
         create_piece(piece, &pool).await?;
     }
+
+    println!("hey");
 
     // Example of moving a piece
     // @Note: Move this to a socket function
@@ -145,8 +144,14 @@ async fn move_piece(
 ) -> Result<(), Box<dyn Error>> {
     // get all valid squares to move "ULDR" direction
     let square_to_move = String::from("36");
-    let valid_squares_to_move = valid_squares_to_move(current_square);
-    if !valid_squares_to_move.contains(&square_to_move) {
+    let directions = Directions {
+        up: format!("{}{}", current_square.row + 1, current_square.col),
+        down: format!("{}{}", current_square.row - 1, current_square.col),
+        left: format!("{}{}", current_square.row, current_square.col - 1),
+        right: format!("{}{}", current_square.row, current_square.col + 1)
+    };
+    let valid_squares_to_move = Piece::valid_squares_to_move(&current_square, &directions);
+    if !valid_squares_to_move.contains(&&square_to_move) {
         println!("invalid square to move, must be up down left or right only!");
     }
 
@@ -180,54 +185,6 @@ async fn move_piece(
             Err(err)
         }
     }
-}
-
-fn valid_squares_to_move(square: Square) -> Vec<String> {
-    let up = format!("{}{}", square.row + 1, square.col);
-    let down = format!("{}{}", square.row - 1, square.col);
-    let left = format!("{}{}", square.row, square.col - 1);
-    let right = format!("{}{}", square.row, square.col + 1);
-
-    let mut valid_squares_to_move = Vec::new();
-
-    // first row conditions
-    if square.row == 1 && square.col == 1 {
-        valid_squares_to_move.extend(vec![down, right]);
-        return valid_squares_to_move;
-    } else if square.row == 1 && square.col == 9 {
-        valid_squares_to_move.extend(vec![down, left]);
-        return valid_squares_to_move;
-    } else if square.row == 1 {
-        valid_squares_to_move.extend(vec![down, left, right]);
-        return valid_squares_to_move;
-    }
-
-    // last row conditions
-    if square.row == 8 && square.col == 1 {
-        valid_squares_to_move.extend(vec![up.clone(), right.clone()]);
-        return valid_squares_to_move;
-    } else if square.row == 8 && square.col == 9 {
-        valid_squares_to_move.extend(vec![up.clone(), left.clone()]);
-        return valid_squares_to_move;
-    } else if square.row == 8 {
-        valid_squares_to_move.extend(vec![up.clone(), left.clone(), right.clone()]);
-        return valid_squares_to_move;
-    }
-
-    // middle rows but last cols
-    if square.row != 1 && square.row != 8 {
-        if square.col == 1 {
-            valid_squares_to_move.extend(vec![up.clone(), down.clone(), right.clone()]);
-            return valid_squares_to_move;
-        } else if square.col == 9 {
-            valid_squares_to_move.extend(vec![up.clone(), down.clone(), left.clone()]);
-            return valid_squares_to_move;
-        }
-    }
-
-    // if middle rows and middle cols
-    valid_squares_to_move.extend(vec![up.clone(), down.clone(), left.clone(), right.clone()]);
-    valid_squares_to_move
 }
 
 async fn compare_and_remove_piece(my_piece: Piece, enemy_piece: Piece, my_player_id: &Uuid, game_id: &Uuid, pool: &sqlx::PgPool) -> Result<(), Box<dyn Error>> {
